@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/widgets/drawer.dart';
 
 class CriarUsuario extends StatefulWidget {
   const CriarUsuario({Key? key}) : super(key: key);
@@ -17,45 +18,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
         centerTitle: true,
         backgroundColor: Colors.blueGrey.shade500,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blueGrey.shade500,
-              ),
-              child: const Text('***DRAWER***',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  ),
-              ),
-            ),
-            //ListTile
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Início'),
-              onTap: (){Navigator.popAndPushNamed(context, '/telaPrincipal');},
-            ),
-            ListTile(
-              leading: const Icon(Icons.list),
-              title: const Text('Extrato'),
-              onTap: (){Navigator.pushNamed(context, '/extrato');},
-            ),
-            ListTile(
-              leading: const Icon(Icons.login),
-              title: const Text('Fazer login'),
-              onTap: (){Navigator.pushNamed(context, '/login');},
-            ),
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('Sobre'),
-              onTap: (){Navigator.pushNamed(context, '/sobre');},
-            ),
-          ],
-        ),
-        ),
+      drawer: const AppDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(100),
