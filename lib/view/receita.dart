@@ -7,13 +7,7 @@ class Receita extends StatefulWidget {
   @override
   State<Receita> createState() => _ReceitaState();
 }
-///
-///
-///
-/// ADICIONAR ROTA
-///
-///
-///
+
 class _ReceitaState extends State<Receita> {
   var formKey = GlobalKey<FormState>();
   @override
@@ -24,7 +18,7 @@ class _ReceitaState extends State<Receita> {
         centerTitle: true,
         backgroundColor: Colors.blueGrey.shade500,
         toolbarHeight: 70,
-        //leading: IconButton(onPressed: (){Navigator.popAndPushNamed(context, '/telaPrincipal');}, icon: const Icon(Icons.close)),
+        leading: IconButton(onPressed: (){Navigator.popAndPushNamed(context, '/telaPrincipal');}, icon: const Icon(Icons.close)),
       ),
       //
       //
@@ -36,12 +30,12 @@ class _ReceitaState extends State<Receita> {
             child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('RECEITA'),
+                  campoTexto('Descrição da receita'),
                   const SizedBox(height: 30),
-                  campoNumerico('***VALOR - NUMÉRICO***'),
+                  campoNumerico('Valor'),
                   const SizedBox(height: 30),
                   campoTexto('***DATA - DATE***'),
-                  const SizedBox(height: 200),
+                  const SizedBox(height: 150),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -76,9 +70,9 @@ class _ReceitaState extends State<Receita> {
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
       ],
-      initialValue: '0.00',
       decoration: InputDecoration(
         labelText: rotulo,
+        hintText: '0.00',
         labelStyle: const TextStyle(
           fontSize: 10,
           color: Colors.black,
@@ -95,7 +89,7 @@ class _ReceitaState extends State<Receita> {
       height: 30,
       child: TextButton(
         onPressed: () {
-          Navigator.popAndPushNamed(context, '/telaPrincipal');
+          Navigator.pop(context);
         },
         child: Text(
           rotulo,
@@ -108,15 +102,13 @@ class _ReceitaState extends State<Receita> {
     );
   }//botaoTexto
 
-  ///
-  ///
   botaoElevated(rotulo) {
     return SizedBox(
       width: 150,
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          ///************SALVAR ENTRADA
+          ///SALVAR ENTRADA
           Navigator.popAndPushNamed(context, '/telaPrincipal');
           },
         child: Text(

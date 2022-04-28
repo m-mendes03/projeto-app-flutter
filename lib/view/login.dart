@@ -11,6 +11,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   var formKey = GlobalKey<FormState>();
+  var txtEmail = TextEditingController();
+  var txtSenha = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +29,9 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 20),                    
                     Image.asset('lib/imagens/grade.jpg', scale: 6),
                     const SizedBox(height: 50),
-                    campoTexto('Email', 'Var'),
+                    campoTexto('Email', txtEmail),
                     const SizedBox(height: 20),
-                    campoSenha('Senha', 'Var'),
+                    campoSenha('Senha', txtSenha),
                     const SizedBox(height: 20),
                     botaoElevated('Fazer Login'),
                     botaoTexto('Criar login'),
@@ -45,6 +47,7 @@ class _LoginState extends State<Login> {
   ///
   campoTexto(rotulo, variavel) {
     return TextFormField(
+      controller: variavel,
       decoration: InputDecoration(
         labelText: rotulo,
         labelStyle: TextStyle(
@@ -52,11 +55,17 @@ class _LoginState extends State<Login> {
           color: Colors.grey.shade500,
         ),
       ),
+      validator: (value){
+        value = value!;
+        if(value == ''){ return 'Insira um email.';}
+        else {return null;}
+      },
     );
   } //campoTexto
   
   campoSenha(rotulo, variavel) {
     return TextFormField(
+      controller: variavel,
       decoration: InputDecoration(
         labelText: rotulo,
         labelStyle: TextStyle(
@@ -65,6 +74,10 @@ class _LoginState extends State<Login> {
         ),
       ),
       obscureText: true,
+      validator: (value){
+        if(value == ''){return 'Insira a senha.';}
+        else {return null;}
+      },
     );
   } //campoSenha
 
@@ -98,9 +111,10 @@ class _LoginState extends State<Login> {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          ///************VERIFICAR LOGIN
-          Navigator.popAndPushNamed(context, '/telaPrincipal');
-          },
+          if(formKey.currentState!.validate()){
+            Navigator.popAndPushNamed(context, '/telaPrincipal');
+          }
+        },
         child: Text(
           rotulo,
           style: const TextStyle(fontSize: 22),

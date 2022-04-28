@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/view/tela_principal.dart';
-import '/view/tela_principal.dart';
-import '/view/login.dart';
-import '/view/criar_usuario.dart';
-import '/view/extrato.dart';
-import '/view/sobre.dart';
-import 'view/despesa.dart';
-import '/view/receita.dart';
+import 'package:projeto/view/transferencia.dart';
+import 'package:projeto/view/login.dart';
+import 'package:projeto/view/criar_usuario.dart';
+import 'package:projeto/view/extrato.dart';
+import 'package:projeto/view/sobre.dart';
+import 'package:projeto/view/despesa.dart';
+import 'package:projeto/view/receita.dart';
 
 ///
 ///telas:
@@ -17,6 +17,7 @@ import '/view/receita.dart';
 ///Sobre()
 ///Despesa()
 ///Receita()
+///Transferencia()
 ///
 
 void main() {
@@ -24,7 +25,7 @@ void main() {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'App',
-      initialRoute: '/telaPrincipal',
+      initialRoute: '/login',
       routes: {
         '/telaPrincipal': (context) => const TelaPrincipal(),
         '/login': (context) => const Login(),
@@ -33,6 +34,7 @@ void main() {
         '/sobre': ((context) => const Sobre()),
         '/despesa': ((context) => const Despesa()),
         '/receita': ((context) => const Receita()),
+        '/transferencia': ((context) => const Transferencia()),
       },
     ),
   );

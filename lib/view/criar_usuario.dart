@@ -10,6 +10,9 @@ class CriarUsuario extends StatefulWidget {
 
 class _CriarUsuarioState extends State<CriarUsuario> {
   var formKey = GlobalKey<FormState>();
+  var txtNome = TextEditingController();
+  var txtEmail = TextEditingController();
+  var txtSenha = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +31,11 @@ class _CriarUsuarioState extends State<CriarUsuario> {
               child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('Nome', 'Var'),
+                  campoTexto('Nome', txtNome),
                   const SizedBox(height: 10),
-                  campoTexto('Email', 'Var'),
+                  campoTexto('Email', txtEmail),
                   const SizedBox(height: 10),
-                  campoTexto('Definir senha', 'Var'),
+                  campoSenha('Definir senha', txtSenha),
                   const SizedBox(height: 30),
                   botaoElevated('Criar Usuário'),
                 ],
@@ -48,6 +51,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
   ///
   campoTexto(rotulo, variavel) {
     return TextFormField(
+      controller: variavel,
       decoration: InputDecoration(
         labelText: rotulo,
         labelStyle: TextStyle(
@@ -55,8 +59,29 @@ class _CriarUsuarioState extends State<CriarUsuario> {
           color: Colors.grey.shade500,
         ),
       ),
+      validator: (value){
+        if(value == ''){return 'Insira um valor válido';}
+        else {return null;}
+      },
     );
   } //campoTexto
+  campoSenha(rotulo, variavel) {
+    return TextFormField(
+      controller: variavel,
+      decoration: InputDecoration(
+        labelText: rotulo,
+        labelStyle: TextStyle(
+          fontSize: 10,
+          color: Colors.grey.shade500,
+        ),
+      ),
+      obscureText: true,
+      validator: (value){
+        if(value == ''){return 'Defina uma senha.';}
+        else {return null;}
+      },
+    );
+  } //campoSenha
 
   ///
   /// BOTAO
@@ -67,7 +92,10 @@ class _CriarUsuarioState extends State<CriarUsuario> {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          caixaDialogo('Usuário criado.');
+          if(formKey.currentState!.validate()){
+            String email = txtEmail.text;
+            caixaDialogo('Usuário "$email" criado.');
+          }
           },
         child: Text(
           rotulo,
@@ -86,14 +114,13 @@ class _CriarUsuarioState extends State<CriarUsuario> {
       builder: (BuildContext context){
         return SimpleDialog(
           title: Text(rotulo),
-          /*actions: <Widget>[
-            TextButton(
-              child: Text(rotulo),
-              onPressed: (){Navigator.of(context).pop();},
-            ),
-          ],*/
           children: <Widget>[
-            TextButton(onPressed: (){Navigator.of(context).pop(); Navigator.popAndPushNamed(context, '/telaPrincipal');}, child: const Text('Fechar'),)
+            TextButton(onPressed: (){
+              Navigator.of(context).pop();
+              Navigator.popAndPushNamed(context, '/telaPrincipal');
+              },
+              child: const Text('Fechar'),
+            ),
           ],
         );
       }

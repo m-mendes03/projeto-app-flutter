@@ -13,7 +13,7 @@ class AppDrawer extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade500,
               ),
-              child: const Text('***DRAWER***',
+              child: const Text('Aplicativo',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

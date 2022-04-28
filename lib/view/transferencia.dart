@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Despesa extends StatefulWidget {
-  const Despesa({ Key? key }) : super(key: key);
+class Transferencia extends StatefulWidget {
+  const Transferencia({ Key? key }) : super(key: key);
 
   @override
-  State<Despesa> createState() => _DespesaState();
+  State<Transferencia> createState() => _TransferenciaState();
 }
 
-class _DespesaState extends State<Despesa> {
+class _TransferenciaState extends State<Transferencia> {
   var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Despesa'),
+        title: const Text('Transferência'),
         centerTitle: true,
         backgroundColor: Colors.blueGrey.shade500,
         toolbarHeight: 70,
-        leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.close)),
+        leading: IconButton(onPressed: (){Navigator.popAndPushNamed(context, '/telaPrincipal');}, icon: const Icon(Icons.close)),
       ),
       
       body: SingleChildScrollView(
@@ -29,7 +29,9 @@ class _DespesaState extends State<Despesa> {
             child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('Descrição da despesa'),
+                  campoTexto('Conta de origem'),
+                  const SizedBox(height: 30),
+                  campoTexto('Conta destino'),
                   const SizedBox(height: 30),
                   campoNumerico('Valor'),
                   const SizedBox(height: 30),
@@ -107,7 +109,7 @@ class _DespesaState extends State<Despesa> {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          ///SALVAR ENTRADA
+          ///************SALVAR ENTRADA
           Navigator.popAndPushNamed(context, '/telaPrincipal');
           },
         child: Text(

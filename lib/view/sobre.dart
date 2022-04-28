@@ -11,14 +11,31 @@ class Sobre extends StatelessWidget {
       appBar: const Appbar(titulo: 'Sobre'),
       // drawer
       drawer: const AppDrawer(),
-        body: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Icon(Icons.info),
-                  Text('Weird dev who does not like this app, but it is having fun doing it.'),
-                ],
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[
+              Image.asset('lib/imagens/avatar.jpg', scale: 1.5,),
+            ],
+          ),
+          const SizedBox(height: 30,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width*0.8,
+                child: const Text(
+                  'Este é um projeto de um aplicativo para entradas e saídas financeiras.\nFoi desenvolvido para a disciplina de "Programação para Dispositivos Móveis" na FATEC Ribeirão Preto.'
+                ),
               ),
+            ],
+          ),
+          const SizedBox(height: 100,),
+          const Icon(Icons.info),
+        ],
+      ),
     );
   }
 }
