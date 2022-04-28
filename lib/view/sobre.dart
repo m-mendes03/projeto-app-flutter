@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/view/login.dart';
 import 'package:projeto/widgets/appbar.dart';
 import 'package:projeto/widgets/drawer.dart';
 
@@ -10,7 +11,7 @@ class Sobre extends StatelessWidget {
     return Scaffold(
       appBar: const Appbar(titulo: 'Sobre'),
       // drawer
-      drawer: const AppDrawer(),
+      drawer: AppDrawer(user: userName),
       body: Column(
         children: [
           Row(
@@ -25,9 +26,9 @@ class Sobre extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width*0.8,
+                width: MediaQuery.of(context).size.width*0.85,
                 child: const Text(
-                  'Este é um projeto de um aplicativo para entradas e saídas financeiras.\nFoi desenvolvido para a disciplina de "Programação para Dispositivos Móveis" na FATEC Ribeirão Preto.'
+                  'Este é um projeto de um aplicativo para entradas e saídas financeiras.\nO objetivo do app é manter um histórico movimentações financeiras feitas pelo usuário.\n\n\nO app não está finalizado e está sendo desenvolvido por Marina Mendes.'
                 ),
               ),
             ],

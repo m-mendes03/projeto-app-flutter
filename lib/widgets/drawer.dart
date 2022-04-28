@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({ Key? key }) : super(key: key);
+  final String user;
+  const AppDrawer({ Key? key, required this.user }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +14,8 @@ class AppDrawer extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade500,
               ),
-              child: const Text('Aplicativo',
-                style: TextStyle(
+              child: Text(user,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   ),

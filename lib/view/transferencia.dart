@@ -10,6 +10,10 @@ class Transferencia extends StatefulWidget {
 
 class _TransferenciaState extends State<Transferencia> {
   var formKey = GlobalKey<FormState>();
+  var txtOrigem = TextEditingController();
+  var txtDestino = TextEditingController();
+  var valor = TextEditingController();
+  var data = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +39,7 @@ class _TransferenciaState extends State<Transferencia> {
                   const SizedBox(height: 30),
                   campoNumerico('Valor'),
                   const SizedBox(height: 30),
-                  campoTexto('***DATA - DATE***'),
+                  campoData('Data'),
                   const SizedBox(height: 150),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -73,7 +77,8 @@ class _TransferenciaState extends State<Transferencia> {
       ],
       decoration: InputDecoration(
         labelText: rotulo,
-        hintText: '0.00',
+        hintText: '1.234,56',
+        hintStyle: const TextStyle(color: Colors.grey),
         labelStyle: const TextStyle(
           fontSize: 10,
           color: Colors.black,
@@ -81,6 +86,19 @@ class _TransferenciaState extends State<Transferencia> {
       ),
     );
   }//campoNumerico
+  campoData(rotulo){
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: rotulo,
+        labelStyle: const TextStyle(
+          fontSize: 10,
+          color: Colors.black,
+        ),
+        hintText: 'dd-MM-yyyy',
+        hintStyle: const TextStyle(color: Colors.grey),
+      ),
+    );
+  }//campoData
   ///
   /// Botões
   ///

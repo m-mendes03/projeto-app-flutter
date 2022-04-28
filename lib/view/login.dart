@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/widgets/drawer.dart';
+//import 'package:projeto/widgets/drawer.dart';
 import '../widgets/appbar.dart';
 
 class Login extends StatefulWidget {
@@ -8,6 +8,8 @@ class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
 }
+
+String userName = '';
 
 class _LoginState extends State<Login> {
   var formKey = GlobalKey<FormState>();
@@ -18,7 +20,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: const Appbar(titulo: 'Login'),
-      drawer: const AppDrawer(),
+//      drawer: const AppDrawer(user: 'user'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(100),
@@ -29,7 +31,7 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 20),                    
                     Image.asset('lib/imagens/grade.jpg', scale: 6),
                     const SizedBox(height: 50),
-                    campoTexto('Email', txtEmail),
+                    campoEmail('Email', txtEmail),
                     const SizedBox(height: 20),
                     campoSenha('Senha', txtSenha),
                     const SizedBox(height: 20),
@@ -43,8 +45,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  ///
-  ///
   campoTexto(rotulo, variavel) {
     return TextFormField(
       controller: variavel,
@@ -62,7 +62,25 @@ class _LoginState extends State<Login> {
       },
     );
   } //campoTexto
-  
+  campoEmail(rotulo, variavel) {
+    return TextFormField(
+      controller: variavel,
+      decoration: InputDecoration(
+        labelText: rotulo,
+        labelStyle: TextStyle(
+          fontSize: 10,
+          color: Colors.grey.shade500,
+        ),
+      ),
+      validator: (value){
+        String padrao = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^,.()[\],.;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+        RegExp regExp = RegExp(padrao);
+        if(value == ''){return 'Insira um email válido';}
+        else if(!regExp.hasMatch(value!)){return 'Email inválido.';}
+        else {return null;}
+      },
+    );
+  } //campoEmail
   campoSenha(rotulo, variavel) {
     return TextFormField(
       controller: variavel,
@@ -102,9 +120,6 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
-  ///
-  ///
   botaoElevated(rotulo) {
     return SizedBox(
       width: 150,
@@ -112,6 +127,7 @@ class _LoginState extends State<Login> {
       child: ElevatedButton(
         onPressed: () {
           if(formKey.currentState!.validate()){
+            userName = txtEmail.text;
             Navigator.popAndPushNamed(context, '/telaPrincipal');
           }
         },

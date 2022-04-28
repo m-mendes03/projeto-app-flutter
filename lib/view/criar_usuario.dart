@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/widgets/drawer.dart';
+//import 'package:projeto/widgets/drawer.dart';
 
 class CriarUsuario extends StatefulWidget {
   const CriarUsuario({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
         centerTitle: true,
         backgroundColor: Colors.blueGrey.shade500,
       ),
-      drawer: const AppDrawer(),
+      //drawer: const AppDrawer(user: 'user'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(100),
@@ -33,7 +33,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
                   const SizedBox(height: 30),
                   campoTexto('Nome', txtNome),
                   const SizedBox(height: 10),
-                  campoTexto('Email', txtEmail),
+                  campoEmail('Email', txtEmail),
                   const SizedBox(height: 10),
                   campoSenha('Definir senha', txtSenha),
                   const SizedBox(height: 30),
@@ -47,8 +47,6 @@ class _CriarUsuarioState extends State<CriarUsuario> {
     );
   }
 
-  ///
-  ///
   campoTexto(rotulo, variavel) {
     return TextFormField(
       controller: variavel,
@@ -60,11 +58,30 @@ class _CriarUsuarioState extends State<CriarUsuario> {
         ),
       ),
       validator: (value){
-        if(value == ''){return 'Insira um valor válido';}
+        if(value == ''){return 'Insira um nome.';}
         else {return null;}
       },
     );
   } //campoTexto
+  campoEmail(rotulo, variavel) {
+    return TextFormField(
+      controller: variavel,
+      decoration: InputDecoration(
+        labelText: rotulo,
+        labelStyle: TextStyle(
+          fontSize: 10,
+          color: Colors.grey.shade500,
+        ),
+      ),
+      validator: (value){
+        String padrao = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^,.()[\],.;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+        RegExp regExp = RegExp(padrao);
+        if(value == ''){return 'Insira um email válido';}
+        else if(!regExp.hasMatch(value!)){return 'Email inválido.';}
+        else {return null;}
+      },
+    );
+  } //campoEmail
   campoSenha(rotulo, variavel) {
     return TextFormField(
       controller: variavel,

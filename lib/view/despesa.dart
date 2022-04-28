@@ -10,6 +10,9 @@ class Despesa extends StatefulWidget {
 
 class _DespesaState extends State<Despesa> {
   var formKey = GlobalKey<FormState>();
+  var txtDescricao = TextEditingController();
+  var valor = TextEditingController();
+  var data = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +36,7 @@ class _DespesaState extends State<Despesa> {
                   const SizedBox(height: 30),
                   campoNumerico('Valor'),
                   const SizedBox(height: 30),
-                  campoTexto('***DATA - DATE***'),
+                  campoData('Data'),
                   const SizedBox(height: 150),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -71,7 +74,8 @@ class _DespesaState extends State<Despesa> {
       ],
       decoration: InputDecoration(
         labelText: rotulo,
-        hintText: '0.00',
+        hintText: '1.234,56',
+        hintStyle: const TextStyle(color: Colors.grey),
         labelStyle: const TextStyle(
           fontSize: 10,
           color: Colors.black,
@@ -79,6 +83,19 @@ class _DespesaState extends State<Despesa> {
       ),
     );
   }//campoNumerico
+  campoData(rotulo){
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: rotulo,
+        labelStyle: const TextStyle(
+          fontSize: 10,
+          color: Colors.black,
+        ),
+        hintText: 'dd-MM-yyyy',
+        hintStyle: const TextStyle(color: Colors.grey),
+      ),
+    );
+  }//campoData
   ///
   /// Botões
   ///

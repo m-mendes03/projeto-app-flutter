@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/view/login.dart';
 import '../widgets/drawer.dart';
 import '../widgets/appbar.dart';
 
@@ -15,6 +16,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   static const List<String> _telas = <String>[
     '/despesa', '/receita', '/transferencia'
   ];
+
   void _onItemTapped(int indice){
     setState(() {
       _estadoSelecionado = indice;
@@ -25,7 +27,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Appbar(titulo: 'APP',),
-      drawer: const AppDrawer(),
+      drawer: AppDrawer(user: userName),
       bottomNavigationBar: BottomNavigationBar(        
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.arrow_downward, color: Colors.red,), label: 'Despesa'),
