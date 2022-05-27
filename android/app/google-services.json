@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "119262863542",
+    "project_id": "app-controle-de-gastos-49d04",
+    "storage_bucket": "app-controle-de-gastos-49d04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119262863542:android:2d35a3ca64d548abe3c617",
+        "android_client_info": {
+          "package_name": "com.example.projeto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119262863542-8gkl6clatnniktgf2jun5q8ve735umr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqVlP9cJebVNvNv87ggeUBLztAl5-Ytfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "119262863542-8gkl6clatnniktgf2jun5q8ve735umr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

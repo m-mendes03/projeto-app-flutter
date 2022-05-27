@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../widgets/mostrar_snackbar.dart';
 
 class Transferencia extends StatefulWidget {
   const Transferencia({ Key? key }) : super(key: key);
@@ -14,8 +18,23 @@ class _TransferenciaState extends State<Transferencia> {
   var txtDestino = TextEditingController();
   var valor = TextEditingController();
   var data = TextEditingController();
+  retornarDocumentoById(id) async{
+    await FirebaseFirestore.instance
+      .collection('registros')
+      .doc(id)
+      .get()
+      .then((doc){
+        txtOrigem.text = doc.get('descricao');
+      });
+  }
   @override
   Widget build(BuildContext context) {
+    var id = ModalRoute.of(context)!.settings.arguments;
+    if(id != null){
+      if(txtOrigem.text.isEmpty && valor.text.isEmpty){
+        retornarDocumentoById(id);
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transferência'),
@@ -33,11 +52,11 @@ class _TransferenciaState extends State<Transferencia> {
             child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('Conta de origem'),
+                  campoTexto('Conta de origem', txtOrigem),
                   const SizedBox(height: 30),
-                  campoTexto('Conta destino'),
+                  campoTexto('Conta destino', txtDestino),
                   const SizedBox(height: 30),
-                  campoNumerico('Valor'),
+                  campoNumerico('Valor', valor),
                   const SizedBox(height: 30),
                   campoData('Data'),
                   const SizedBox(height: 150),
@@ -45,7 +64,7 @@ class _TransferenciaState extends State<Transferencia> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       botaoTexto('Cancelar'),
-                      botaoElevated('Salvar'),
+                      botaoElevated('Salvar', id: id),
                     ],
                   ),
                 ],
@@ -58,8 +77,9 @@ class _TransferenciaState extends State<Transferencia> {
   ///
   ///campoTexto
   ///
-  campoTexto(rotulo){
+  campoTexto(rotulo, controller){
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: rotulo,
         labelStyle: const TextStyle(
@@ -69,8 +89,9 @@ class _TransferenciaState extends State<Transferencia> {
       ),
     );
   }//campoTexto
-  campoNumerico(rotulo){
+  campoNumerico(rotulo, controller){
     return TextFormField(
+      controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true,),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
@@ -121,14 +142,41 @@ class _TransferenciaState extends State<Transferencia> {
     );
   }//botaoTexto
 
-  botaoElevated(rotulo) {
+  botaoElevated(rotulo, {id}) {
     return SizedBox(
       width: 150,
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          ///************SALVAR ENTRADA
-          Navigator.popAndPushNamed(context, '/telaPrincipal');
+          if(id == null){
+            FirebaseFirestore.instance
+            .collection('registros')
+            .add(
+              {
+                "tipo": 'transferencia',
+                "uid": FirebaseAuth.instance.currentUser!.uid,
+                "origem": txtOrigem.text,
+                "destino": txtDestino.text,
+                "valor": double.parse(valor.text),
+              }
+            );
+            snackbarMsg(context, 'Item adicionado: '+ txtOrigem.text);
+          }else{
+            FirebaseFirestore.instance
+            .collection('registros')
+            .doc(id.toString())
+            .set(
+              {
+                "tipo": 'transferencia',
+                "uid": FirebaseAuth.instance.currentUser!.uid,
+                "origem": txtOrigem.text,
+                "destino": txtDestino.text,
+                "valor": double.parse(valor.text),
+              }
+            );
+            snackbarMsg(context, 'WHAT');
+          }
+          Navigator.pop(context);
           },
         child: Text(
           rotulo,

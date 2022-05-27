@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projeto/widgets/mostrar_snackbar.dart';
 
 class Despesa extends StatefulWidget {
   const Despesa({ Key? key }) : super(key: key);
@@ -13,8 +16,23 @@ class _DespesaState extends State<Despesa> {
   var txtDescricao = TextEditingController();
   var valor = TextEditingController();
   var data = TextEditingController();
+  retornarDocumentoById(id) async{
+    await FirebaseFirestore.instance
+      .collection('registros')
+      .doc(id)
+      .get()
+      .then((doc){
+        txtDescricao.text = doc.get('descricao');
+      });
+  }
   @override
   Widget build(BuildContext context) {
+    var id = ModalRoute.of(context)!.settings.arguments;
+    if(id != null){
+      if(txtDescricao.text.isEmpty && valor.text.isEmpty){
+        retornarDocumentoById(id);
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Despesa'),
@@ -32,9 +50,9 @@ class _DespesaState extends State<Despesa> {
             child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('Descrição da despesa'),
+                  campoTexto('Descrição da despesa', txtDescricao),
                   const SizedBox(height: 30),
-                  campoNumerico('Valor'),
+                  campoNumerico('Valor', valor),
                   const SizedBox(height: 30),
                   campoData('Data'),
                   const SizedBox(height: 150),
@@ -42,7 +60,7 @@ class _DespesaState extends State<Despesa> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       botaoTexto('Cancelar'),
-                      botaoElevated('Salvar'),
+                      botaoElevated('Salvar', id: id),
                     ],
                   ),
                 ],
@@ -55,8 +73,9 @@ class _DespesaState extends State<Despesa> {
   ///
   ///campoTexto
   ///
-  campoTexto(rotulo){
+  campoTexto(rotulo, controller){
     return TextFormField(
+		controller: controller,
       decoration: InputDecoration(
         labelText: rotulo,
         labelStyle: const TextStyle(
@@ -66,8 +85,9 @@ class _DespesaState extends State<Despesa> {
       ),
     );
   }//campoTexto
-  campoNumerico(rotulo){
+  campoNumerico(rotulo, controller){
     return TextFormField(
+		controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true,),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
@@ -118,14 +138,39 @@ class _DespesaState extends State<Despesa> {
     );
   }//botaoTexto
 
-  botaoElevated(rotulo) {
+  botaoElevated(rotulo, {id}) {
     return SizedBox(
       width: 150,
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          ///SALVAR ENTRADA
-          Navigator.popAndPushNamed(context, '/telaPrincipal');
+          if(id == null){
+            FirebaseFirestore.instance
+            .collection('registros')
+            .add(
+              {
+                "tipo": 'despesa',
+                "uid": FirebaseAuth.instance.currentUser!.uid,
+                "descricao": txtDescricao.text,
+                "valor": double.parse(valor.text),
+              }
+            );
+            snackbarMsg(context, 'Item adicionado: '+ txtDescricao.text);
+          }else{
+            FirebaseFirestore.instance
+            .collection('registros')
+            .doc(id.toString())
+            .set(
+              {
+                "tipo": 'despesa',
+                "uid": FirebaseAuth.instance.currentUser!.uid,
+                "descricao": txtDescricao.text,
+                "valor": double.parse(valor.text),
+              }
+            );
+            snackbarMsg(context, 'WHAT');
+          }
+          Navigator.pop(context);
           },
         child: Text(
           rotulo,

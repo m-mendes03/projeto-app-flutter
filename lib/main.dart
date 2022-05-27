@@ -7,6 +7,8 @@ import 'package:projeto/view/extrato.dart';
 import 'package:projeto/view/sobre.dart';
 import 'package:projeto/view/despesa.dart';
 import 'package:projeto/view/receita.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 ///
 ///telas:
@@ -20,7 +22,10 @@ import 'package:projeto/view/receita.dart';
 ///Transferencia()
 ///
 
-void main() {
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

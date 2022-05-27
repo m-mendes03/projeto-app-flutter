@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:projeto/widgets/drawer.dart';
+import 'package:projeto/widgets/mostrar_snackbar.dart';
 import '../widgets/appbar.dart';
 
 class Login extends StatefulWidget {
@@ -9,18 +10,16 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-String userName = '';
-
 class _LoginState extends State<Login> {
   var formKey = GlobalKey<FormState>();
   var txtEmail = TextEditingController();
   var txtSenha = TextEditingController();
+  bool isloading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: const Appbar(titulo: 'Login'),
-//      drawer: const AppDrawer(user: 'user'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(100),
@@ -127,8 +126,7 @@ class _LoginState extends State<Login> {
       child: ElevatedButton(
         onPressed: () {
           if(formKey.currentState!.validate()){
-            userName = txtEmail.text;
-            Navigator.popAndPushNamed(context, '/telaPrincipal');
+            login(txtEmail.text, txtSenha.text);
           }
         },
         child: Text(
@@ -141,5 +139,23 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+  ///
+  /// LOGIN
+  /// 
+  void login(email, senha){
+    FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: senha)
+    .then((res){
+      snackbarMsg(context, 'Login realizado.');
+      Navigator.popAndPushNamed(context, '/telaPrincipal');
+    })
+    .catchError((e){
+      switch(e.code){
+        case 'invalid-email': snackbarMsg(context, 'Email inválido.'); break;
+        case 'user-not-found': snackbarMsg(context, 'Usuário não encontrado.'); break;
+        case 'wrong-password': snackbarMsg(context, 'Senha incorreta.'); break;
+        default: snackbarMsg(context, e.code.toString());
+      }
+    });
   }
 }

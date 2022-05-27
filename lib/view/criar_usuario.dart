@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:projeto/widgets/drawer.dart';
 
 class CriarUsuario extends StatefulWidget {
   const CriarUsuario({Key? key}) : super(key: key);
@@ -110,8 +111,8 @@ class _CriarUsuarioState extends State<CriarUsuario> {
       child: ElevatedButton(
         onPressed: () {
           if(formKey.currentState!.validate()){
-            String email = txtEmail.text;
-            caixaDialogo('Usuário "$email" criado.');
+            //caixaDialogo('Usuário "$email" criado.');
+            criarConta(txtNome.text, txtEmail.text, txtSenha.text);
           }
           },
         child: Text(
@@ -134,7 +135,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
           children: <Widget>[
             TextButton(onPressed: (){
               Navigator.of(context).pop();
-              Navigator.popAndPushNamed(context, '/telaPrincipal');
+              //Navigator.popAndPushNamed(context, '/telaPrincipal');
               },
               child: const Text('Fechar'),
             ),
@@ -143,4 +144,32 @@ class _CriarUsuarioState extends State<CriarUsuario> {
       }
     );
   }//caixaDialogo
+  ///
+  ///CRIAR CONTA
+  ///
+  void criarConta(nome, email, senha){
+    FirebaseAuth.instance
+    .createUserWithEmailAndPassword(email: email, password: senha)
+    .then((res){
+      FirebaseFirestore.instance.collection('usuarios')
+          .add(
+            {
+              "uid" : res.user!.uid.toString(),
+              "nome" : nome,
+            }
+          );
+      Navigator.pop(context);
+    }).catchError((e){
+      switch(e.code){
+        case 'email-already-in-use':
+            caixaDialogo('O email já foi cadastrado.');
+            break;
+          case 'invalid-email':
+            caixaDialogo('O email é inválido.');
+            break;
+          default:
+            caixaDialogo(e.code.toString());
+      }
+    });
+  }
 }

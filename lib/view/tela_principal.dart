@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto/view/login.dart';
 import '../widgets/drawer.dart';
 import '../widgets/appbar.dart';
 
@@ -27,7 +27,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Appbar(titulo: 'APP',),
-      drawer: AppDrawer(user: userName),
+      drawer: AppDrawer(user: FirebaseAuth.instance.currentUser!.email.toString()),
       bottomNavigationBar: BottomNavigationBar(        
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.arrow_downward, color: Colors.red,), label: 'Despesa'),

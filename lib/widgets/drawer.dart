@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projeto/widgets/mostrar_snackbar.dart';
 
 class AppDrawer extends StatelessWidget {
   final String user;
@@ -33,9 +35,9 @@ class AppDrawer extends StatelessWidget {
               onTap: (){Navigator.pushNamed(context, '/extrato');},
             ),
             ListTile(
-              leading: const Icon(Icons.login),
-              title: const Text('Fazer login'),
-              onTap: (){Navigator.pushNamed(context, '/login');},
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: (){FirebaseAuth.instance.signOut(); snackbarMsg(context, 'Até mais!'); Navigator.pushNamed(context, '/login');},
             ),
             ListTile(
               leading: const Icon(Icons.info),

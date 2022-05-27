@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/view/login.dart';
 import 'package:projeto/widgets/appbar.dart';
 import 'package:projeto/widgets/drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Sobre extends StatelessWidget {
   const Sobre({ Key? key }) : super(key: key);
@@ -11,7 +11,7 @@ class Sobre extends StatelessWidget {
     return Scaffold(
       appBar: const Appbar(titulo: 'Sobre'),
       // drawer
-      drawer: AppDrawer(user: userName),
+      drawer: AppDrawer(user: FirebaseAuth.instance.currentUser!.email.toString()),
       body: Column(
         children: [
           Row(
