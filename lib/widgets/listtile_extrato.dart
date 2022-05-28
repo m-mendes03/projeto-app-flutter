@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'mostrar_snackbar.dart';
 
 ListTile listaExtrato(context, item, descricao, valor) {
+  var tipo = item.data()['tipo'] ?? 'telaPrincipal';
     return ListTile(
             leading: const Icon(Icons.money),
             title: Text(descricao),
@@ -20,7 +21,7 @@ ListTile listaExtrato(context, item, descricao, valor) {
             onTap: () {
               Navigator.pushNamed(
                 context,
-                '/despesa',
+                '/' + tipo.toString(),
                 arguments: item.id,
               );
             },

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../widgets/mostrar_snackbar.dart';
 
 class Transferencia extends StatefulWidget {
@@ -24,7 +23,9 @@ class _TransferenciaState extends State<Transferencia> {
       .doc(id)
       .get()
       .then((doc){
-        txtOrigem.text = doc.get('descricao');
+        txtOrigem.text = doc.get('origem');
+        txtDestino.text = doc.get('destino');
+        valor.text = doc.get('valor').toString();
       });
   }
   @override
@@ -174,7 +175,7 @@ class _TransferenciaState extends State<Transferencia> {
                 "valor": double.parse(valor.text),
               }
             );
-            snackbarMsg(context, 'WHAT');
+            snackbarMsg(context, 'Transferência atualizada.s');
           }
           Navigator.pop(context);
           },

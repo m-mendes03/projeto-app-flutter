@@ -54,7 +54,7 @@ class _ExtratoState extends State<Extrato> {
     );
   }
     exibirTransacoes(item) {
-      String descricao = item.data()['descricao'];
+      String descricao = item.data()['descricao'] ?? item.data()['origem'] + ' -> ' + item.data()['destino'];
       String valor = item.data()['valor'].toString();
       return listaExtrato(context, item, descricao, valor);
   }

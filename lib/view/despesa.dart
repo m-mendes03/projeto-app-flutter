@@ -23,6 +23,7 @@ class _DespesaState extends State<Despesa> {
       .get()
       .then((doc){
         txtDescricao.text = doc.get('descricao');
+        valor.text = doc.get('valor').toString();
       });
   }
   @override
@@ -168,7 +169,7 @@ class _DespesaState extends State<Despesa> {
                 "valor": double.parse(valor.text),
               }
             );
-            snackbarMsg(context, 'WHAT');
+            snackbarMsg(context, 'Despesa atualizada.');
           }
           Navigator.pop(context);
           },

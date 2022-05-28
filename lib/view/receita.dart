@@ -23,6 +23,7 @@ class _ReceitaState extends State<Receita> {
       .get()
       .then((doc){
         txtDescricao.text = doc.get('descricao');
+        valor.text = doc.get('valor').toString();
       });
   }
   @override
@@ -169,7 +170,7 @@ class _ReceitaState extends State<Receita> {
                 "valor": double.parse(valor.text),
               }
             );
-            snackbarMsg(context, 'WHAT');
+            snackbarMsg(context, 'Receita atualizada.');
           }
           Navigator.pop(context);
           },
