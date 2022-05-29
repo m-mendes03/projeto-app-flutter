@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../widgets/caixa_dialogo.dart';
 
 class CriarUsuario extends StatefulWidget {
   const CriarUsuario({Key? key}) : super(key: key);
@@ -14,6 +15,8 @@ class _CriarUsuarioState extends State<CriarUsuario> {
   var txtNome = TextEditingController();
   var txtEmail = TextEditingController();
   var txtSenha = TextEditingController();
+  var txtCPF = TextEditingController();
+  var txtTelefone = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,13 +35,19 @@ class _CriarUsuarioState extends State<CriarUsuario> {
               child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('Nome', txtNome),
+                  campoTexto('Nome', txtNome, 'Insira um nome'),
                   const SizedBox(height: 10),
                   campoEmail('Email', txtEmail),
+                  const SizedBox(height: 10),
+                  campoTexto('CPF', txtCPF, 'Insira um CPF', hint: '999.999.999-99'),
+                  const SizedBox(height: 10),
+                  campoTexto('Telefone', txtTelefone, 'Insira um telefone', hint: '99-999999999'),
                   const SizedBox(height: 10),
                   campoSenha('Definir senha', txtSenha),
                   const SizedBox(height: 30),
                   botaoElevated('Criar Usuário'),
+                  const SizedBox(height: 5),
+                  botaoTexto('Cancelar'),
                 ],
               ),
             ),
@@ -48,7 +57,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
     );
   }
 
-  campoTexto(rotulo, variavel) {
+  campoTexto(rotulo, variavel, aviso, {hint}) {
     return TextFormField(
       controller: variavel,
       decoration: InputDecoration(
@@ -57,9 +66,11 @@ class _CriarUsuarioState extends State<CriarUsuario> {
           fontSize: 10,
           color: Colors.grey.shade500,
         ),
+        hintText: hint ?? '',
+        hintStyle: const TextStyle(fontSize: 12, color: Colors.grey),
       ),
       validator: (value){
-        if(value == ''){return 'Insira um nome.';}
+        if(value == ''){return aviso;}
         else {return null;}
       },
     );
@@ -95,7 +106,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
       ),
       obscureText: true,
       validator: (value){
-        if(value == ''){return 'Defina uma senha.';}
+        if(value == ''){return 'Defina uma senha';}
         else {return null;}
       },
     );
@@ -104,6 +115,24 @@ class _CriarUsuarioState extends State<CriarUsuario> {
   ///
   /// BOTAO
   ///
+  botaoTexto(rotulo) {
+    return SizedBox(
+      width: 100,
+      height: 30,
+      child: TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text(
+          rotulo,
+          style: const TextStyle(fontSize: 12),
+        ),
+        style: TextButton.styleFrom(
+          primary: Colors.grey.shade600,
+        ),
+      ),
+    );
+  }//botaoTexto
   botaoElevated(rotulo) {
     return SizedBox(
       width: 150,
@@ -111,8 +140,7 @@ class _CriarUsuarioState extends State<CriarUsuario> {
       child: ElevatedButton(
         onPressed: () {
           if(formKey.currentState!.validate()){
-            //caixaDialogo('Usuário "$email" criado.');
-            criarConta(txtNome.text, txtEmail.text, txtSenha.text);
+            criarConta(txtNome.text, txtEmail.text, txtSenha.text, txtCPF.text, txtTelefone.text);
           }
           },
         child: Text(
@@ -126,28 +154,11 @@ class _CriarUsuarioState extends State<CriarUsuario> {
       ),
     );
   }//botaoElevated
-  caixaDialogo(rotulo){
-    return showDialog(
-      context: (context),
-      builder: (BuildContext context){
-        return SimpleDialog(
-          title: Text(rotulo),
-          children: <Widget>[
-            TextButton(onPressed: (){
-              Navigator.of(context).pop();
-              //Navigator.popAndPushNamed(context, '/telaPrincipal');
-              },
-              child: const Text('Fechar'),
-            ),
-          ],
-        );
-      }
-    );
-  }//caixaDialogo
+  
   ///
   ///CRIAR CONTA
   ///
-  void criarConta(nome, email, senha){
+  void criarConta(nome, email, senha, cpf, telefone){
     FirebaseAuth.instance
     .createUserWithEmailAndPassword(email: email, password: senha)
     .then((res){
@@ -156,19 +167,21 @@ class _CriarUsuarioState extends State<CriarUsuario> {
             {
               "uid" : res.user!.uid.toString(),
               "nome" : nome,
+              "cpf" : cpf,
+              "telefone" : telefone
             }
           );
       Navigator.pop(context);
     }).catchError((e){
       switch(e.code){
         case 'email-already-in-use':
-            caixaDialogo('O email já foi cadastrado.');
+            caixaDialogo(context, 'O email já foi cadastrado.');
             break;
           case 'invalid-email':
-            caixaDialogo('O email é inválido.');
+            caixaDialogo(context, 'O email é inválido.');
             break;
           default:
-            caixaDialogo(e.code.toString());
+            caixaDialogo(context, e.code.toString());
       }
     });
   }

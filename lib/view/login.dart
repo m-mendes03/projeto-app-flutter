@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto/widgets/caixa_dialogo.dart';
 import 'package:projeto/widgets/mostrar_snackbar.dart';
 import '../widgets/appbar.dart';
 
@@ -35,6 +36,7 @@ class _LoginState extends State<Login> {
                     campoSenha('Senha', txtSenha),
                     const SizedBox(height: 20),
                     botaoElevated('Fazer Login'),
+                    const SizedBox(height: 5),
                     botaoTexto('Criar login'),
                   ],
                 ),
@@ -151,10 +153,10 @@ class _LoginState extends State<Login> {
     })
     .catchError((e){
       switch(e.code){
-        case 'invalid-email': snackbarMsg(context, 'Email inválido.'); break;
-        case 'user-not-found': snackbarMsg(context, 'Usuário não encontrado.'); break;
-        case 'wrong-password': snackbarMsg(context, 'Senha incorreta.'); break;
-        default: snackbarMsg(context, e.code.toString());
+        case 'invalid-email': caixaDialogo(context, 'Email inválido.'); break;
+        case 'user-not-found': caixaDialogo(context, 'Usuário não encontrado.'); break;
+        case 'wrong-password': caixaDialogo(context, 'Senha incorreta.'); break;
+        default: caixaDialogo(context, e.code.toString());
       }
     });
   }
