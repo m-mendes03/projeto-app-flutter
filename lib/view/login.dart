@@ -46,23 +46,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  campoTexto(rotulo, variavel) {
-    return TextFormField(
-      controller: variavel,
-      decoration: InputDecoration(
-        labelText: rotulo,
-        labelStyle: TextStyle(
-          fontSize: 10,
-          color: Colors.grey.shade500,
-        ),
-      ),
-      validator: (value){
-        value = value!;
-        if(value == ''){ return 'Insira um email.';}
-        else {return null;}
-      },
-    );
-  } //campoTexto
+
   campoEmail(rotulo, variavel) {
     return TextFormField(
       controller: variavel,

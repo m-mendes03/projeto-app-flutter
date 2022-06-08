@@ -25,7 +25,6 @@ class _CriarUsuarioState extends State<CriarUsuario> {
         centerTitle: true,
         backgroundColor: Colors.blueGrey.shade500,
       ),
-      //drawer: const AppDrawer(user: 'user'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(100),

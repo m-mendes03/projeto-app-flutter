@@ -53,13 +53,13 @@ class _TransferenciaState extends State<Transferencia> {
             child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('Conta de origem', txtOrigem),
+                  campoTexto('Conta de origem', txtOrigem, 'Insira uma origem.'),
                   const SizedBox(height: 30),
-                  campoTexto('Conta destino', txtDestino),
+                  campoTexto('Conta destino', txtDestino, 'Insira um destino.'),
                   const SizedBox(height: 30),
-                  campoNumerico('Valor', valor),
+                  campoNumerico('Valor', valor, 'Insira um valor.'),
                   const SizedBox(height: 30),
-                  campoData('Data'),
+                  campoData('Data', data),
                   const SizedBox(height: 150),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -78,9 +78,9 @@ class _TransferenciaState extends State<Transferencia> {
   ///
   ///campoTexto
   ///
-  campoTexto(rotulo, controller){
+  campoTexto(rotulo, variavel, aviso){
     return TextFormField(
-      controller: controller,
+      controller: variavel,
       decoration: InputDecoration(
         labelText: rotulo,
         labelStyle: const TextStyle(
@@ -88,11 +88,15 @@ class _TransferenciaState extends State<Transferencia> {
           color: Colors.black,
         ),
       ),
+      validator: (value){
+        if(value == ''){ return aviso;}
+        else {return null;}
+      },
     );
   }//campoTexto
-  campoNumerico(rotulo, controller){
+  campoNumerico(rotulo, variavel, aviso){
     return TextFormField(
-      controller: controller,
+      controller: variavel,
       keyboardType: const TextInputType.numberWithOptions(decimal: true,),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
@@ -106,10 +110,16 @@ class _TransferenciaState extends State<Transferencia> {
           color: Colors.black,
         ),
       ),
+      validator: (value){
+        if(value == ''){ return aviso;}
+        else {return null;}
+      },
     );
   }//campoNumerico
-  campoData(rotulo){
+  campoData(rotulo, variavel){
     return TextFormField(
+      controller: variavel,
+      keyboardType: const TextInputType.numberWithOptions(decimal: false,),
       decoration: InputDecoration(
         labelText: rotulo,
         labelStyle: const TextStyle(
@@ -119,6 +129,12 @@ class _TransferenciaState extends State<Transferencia> {
         hintText: 'dd-MM-yyyy',
         hintStyle: const TextStyle(color: Colors.grey),
       ),
+      validator: (value){
+        RegExp regExp = RegExp(r'^([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))(\-)\d{4}$');
+        if(value == ''){return 'Insira uma data válida';}
+        else if(!regExp.hasMatch(value!)){return 'Formato de data inválida. Usar formato dia-mês-ano.';}        
+        else {return null;}
+      },
     );
   }//campoData
   ///
@@ -149,35 +165,39 @@ class _TransferenciaState extends State<Transferencia> {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          if(id == null){
-            FirebaseFirestore.instance
-            .collection('registros')
-            .add(
-              {
-                "tipo": 'transferencia',
-                "uid": FirebaseAuth.instance.currentUser!.uid,
-                "origem": txtOrigem.text,
-                "destino": txtDestino.text,
-                "valor": double.parse(valor.text),
-              }
-            );
-            snackbarMsg(context, 'Item adicionado: '+ txtOrigem.text);
-          }else{
-            FirebaseFirestore.instance
-            .collection('registros')
-            .doc(id.toString())
-            .set(
-              {
-                "tipo": 'transferencia',
-                "uid": FirebaseAuth.instance.currentUser!.uid,
-                "origem": txtOrigem.text,
-                "destino": txtDestino.text,
-                "valor": double.parse(valor.text),
-              }
-            );
-            snackbarMsg(context, 'Transferência atualizada.s');
-          }
-          Navigator.pop(context);
+          if(formKey.currentState!.validate()){
+            if(id == null){
+              FirebaseFirestore.instance
+              .collection('registros')
+              .add(
+                {
+                  "tipo": 'transferencia',
+                  "uid": FirebaseAuth.instance.currentUser!.uid,
+                  "origem": txtOrigem.text,
+                  "destino": txtDestino.text,
+                  "valor": double.parse(valor.text),
+                  "data": data.text,
+                }
+              );
+              snackbarMsg(context, 'Item adicionado: '+ txtOrigem.text);
+            }else{
+              FirebaseFirestore.instance
+              .collection('registros')
+              .doc(id.toString())
+              .set(
+                {
+                  "tipo": 'transferencia',
+                  "uid": FirebaseAuth.instance.currentUser!.uid,
+                  "origem": txtOrigem.text,
+                  "destino": txtDestino.text,
+                  "valor": double.parse(valor.text),
+                  "data": data.text,
+                }
+              );
+              snackbarMsg(context, 'Transferência atualizada.');
+            }
+            Navigator.pop(context);
+            }
           },
         child: Text(
           rotulo,
