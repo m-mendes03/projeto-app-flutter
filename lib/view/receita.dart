@@ -16,6 +16,8 @@ class _ReceitaState extends State<Receita> {
   var txtDescricao = TextEditingController();
   var valor = TextEditingController();
   var data = TextEditingController();
+  var txtConta = TextEditingController();
+  var txtCategoria = TextEditingController();
   retornarDocumentoById(id) async{
     await FirebaseFirestore.instance
       .collection('registros')
@@ -24,6 +26,9 @@ class _ReceitaState extends State<Receita> {
       .then((doc){
         txtDescricao.text = doc.get('descricao');
         valor.text = doc.get('valor').toString();
+        data.text = doc.get('data').toString();
+        txtConta.text = doc.get('conta').toString();
+        txtCategoria.text = doc.get('categoria').toString();
       });
   }
   @override
@@ -54,6 +59,10 @@ class _ReceitaState extends State<Receita> {
                   const SizedBox(height: 30),
                   campoTexto('Descrição da receita', txtDescricao, 'Insira uma descrição.'),
                   const SizedBox(height: 30),
+                  campoTexto('Conta', txtConta, 'Insira uma conta.'),
+                  const SizedBox(height: 30),
+                  campoTexto('Categoria', txtCategoria, 'Insira uma categoria.'),
+                  const SizedBox(height: 30),
                   campoNumerico('Valor', valor, 'Insira um valor.'),
                   const SizedBox(height: 30),
                   campoData('Data', data),
@@ -62,7 +71,7 @@ class _ReceitaState extends State<Receita> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       botaoTexto('Cancelar'),
-                      botaoElevated('Salvar'),
+                      botaoElevated('Salvar', id),
                     ],
                   ),
                 ],
@@ -129,7 +138,7 @@ class _ReceitaState extends State<Receita> {
       validator: (value){
         RegExp regExp = RegExp(r'^([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))(\-)\d{4}$');
         if(value == ''){return 'Insira uma data válida';}
-        else if(!regExp.hasMatch(value!)){return 'Formato de data inválida. Usar formato dia-mês-ano.';}        
+        else if(!regExp.hasMatch(value!)){return 'Formato de data inválida. Usar formato dd-mm-aaaa.';}        
         else {return null;}
       },
     );
@@ -156,7 +165,7 @@ class _ReceitaState extends State<Receita> {
     );
   }//botaoTexto
 
-  botaoElevated(rotulo, {id}) {
+  botaoElevated(rotulo, id) {
     return SizedBox(
       width: 150,
       height: 50,
@@ -173,6 +182,8 @@ class _ReceitaState extends State<Receita> {
                   "descricao": txtDescricao.text,
                   "valor": double.parse(valor.text),
                   "data": data.text,
+                  "conta": txtConta.text,
+                  "categoria": txtCategoria.text,
                 }
               );
               snackbarMsg(context, 'Item adicionado: '+ txtDescricao.text);
@@ -187,6 +198,8 @@ class _ReceitaState extends State<Receita> {
                   "descricao": txtDescricao.text,
                   "valor": double.parse(valor.text),
                   "data": data.text,
+                  "conta": txtConta.text,
+                  "categoria": txtCategoria.text,
                 }
               );
               snackbarMsg(context, 'Receita atualizada.');

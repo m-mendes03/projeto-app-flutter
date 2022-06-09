@@ -13,7 +13,10 @@ class TelaPrincipal extends StatefulWidget {
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
   int _estadoSelecionado = 0;
-  var registros;
+  var despesas;
+  var receitas;
+  double somaDespesa = 0.0;
+  double somaReceita = 0.0;
 
   static const List<String> _telas = <String>[
     '/despesa', '/receita', '/transferencia'
@@ -28,9 +31,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    registros = FirebaseFirestore.instance
+    despesas = FirebaseFirestore.instance
         .collection('registros')
-        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid);
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('tipo', isEqualTo: 'despesa');
+    receitas = FirebaseFirestore.instance
+        .collection('registros')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('tipo', isEqualTo: 'receita');
   }
   @override
   Widget build(BuildContext context) {
@@ -44,7 +52,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
           BottomNavigationBarItem(icon: Icon(Icons.swap_vert, color: Colors.teal,), label: 'Transferência'),
         ],
         selectedItemColor: Colors.black,
-        backgroundColor: Colors.white10,
+        backgroundColor: Colors.white60,
         iconSize: 50,
         onTap: _onItemTapped,
       ),
@@ -54,46 +62,91 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         child: Center(
           child: Column(
             children:[
-              Container(
-                margin: const EdgeInsets.all(5),
-                height: MediaQuery.of(context).size.height*0.25,
-                width: MediaQuery.of(context).size.width*0.85,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.shade300,
-                ),
-                child: 
-                const Text("Balanço: "),
-                //Image.network('https://cdn.pixabay.com/photo/2020/07/08/04/12/work-5382501_960_720.jpg', scale: 5,),
+              StreamBuilder<QuerySnapshot>(
+                stream: despesas.snapshots(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return const Center(child: Text('Sem conexão.'));
+                    case ConnectionState.waiting:
+                      return const Center(child: CircularProgressIndicator());
+                    default:
+                    final dados = snapshot.requireData;
+                    somaDespesa = somas(dados.size, dados);
+                    return Container(
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
+                      height: MediaQuery.of(context).size.height*0.15,
+                      width: MediaQuery.of(context).size.width*0.65,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey.shade300,
+                      ),
+                      child: 
+                      Text("Despesas: \n\nR\$ " + somaDespesa.toStringAsFixed(2),
+                      style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,),
+                      textAlign: TextAlign.center),
+                    );
+                  }
+                },
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: receitas.snapshots(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return const Center(child: Text('Sem conexão.'));
+                    case ConnectionState.waiting:
+                      return const Center(child: CircularProgressIndicator());
+                    default:
+                    final dados = snapshot.requireData;
+                    somaReceita = somas(dados.size, dados);
+                    return Container(
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
+                      height: MediaQuery.of(context).size.height*0.15,
+                      width: MediaQuery.of(context).size.width*0.65,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey.shade300,
+                      ),
+                      child: 
+                      Text("Receitas: \n\nR\$ " + somaReceita.toStringAsFixed(2),
+                      style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,),
+                      textAlign: TextAlign.center),
+                    );
+                  }
+                },
               ),
               Container(
-                margin: const EdgeInsets.all(5),
-                height: MediaQuery.of(context).size.height*0.25,
-                width: MediaQuery.of(context).size.width*0.85,
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
+                height: MediaQuery.of(context).size.height*0.15,
+                width: MediaQuery.of(context).size.width*0.65,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey.shade300,
                 ),
                 child: 
-                const Text("Despesas soma:"),
-                //Image.network('https://cdn.pixabay.com/photo/2015/01/08/18/27/startup-593341_960_720.jpg', scale: 5,),
-              ),
-              Container(
-                margin: const EdgeInsets.all(5),
-                height: MediaQuery.of(context).size.height*0.25,
-                width: MediaQuery.of(context).size.width*0.85,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.shade300,
-                ),
-                child: 
-                const Text("Receitas soma: "),
-                //Image.network('https://cdn.pixabay.com/photo/2016/11/19/14/00/code-1839406_960_720.jpg', scale: 5,),
+                Text("Balanço: \n\nR\$ " + (somaReceita-somaDespesa).toStringAsFixed(2),
+                style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,),
+                textAlign: TextAlign.center),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+  balanco(receita, despesa){
+    double balanco = receita - despesa;
+    return balanco;
+  }
+  somas(size, dados){
+    double soma = 0.0;
+    for(int i = 0; i < size; i++){
+      soma += double.parse(dados.docs[i].data()['valor'].toString());
+    }
+    return soma;
   }
 }

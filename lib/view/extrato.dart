@@ -13,11 +13,11 @@ class Extrato extends StatefulWidget {
 }
 
 class _ExtratoState extends State<Extrato> {
-  var despesas;
+  var registros;
   @override
   void initState() {
     super.initState();
-    despesas = FirebaseFirestore.instance
+    registros = FirebaseFirestore.instance
         .collection('registros')
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid);
   }
@@ -31,8 +31,7 @@ class _ExtratoState extends State<Extrato> {
           padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
           child: 
             StreamBuilder<QuerySnapshot>(
-            //fonte de dados
-            stream: despesas.snapshots(),
+            stream: registros.snapshots(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:

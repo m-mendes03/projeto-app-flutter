@@ -16,6 +16,8 @@ class _DespesaState extends State<Despesa> {
   var txtDescricao = TextEditingController();
   var valor = TextEditingController();
   var data = TextEditingController();
+  var txtConta = TextEditingController();
+  var txtCategoria = TextEditingController();
   retornarDocumentoById(id) async{
     await FirebaseFirestore.instance
       .collection('registros')
@@ -24,6 +26,9 @@ class _DespesaState extends State<Despesa> {
       .then((doc){
         txtDescricao.text = doc.get('descricao');
         valor.text = doc.get('valor').toString();
+        data.text = doc.get('data').toString();
+        txtConta.text = doc.get('conta').toString();
+        txtCategoria.text = doc.get('categoria').toString();
       });
   }
   @override
@@ -51,7 +56,11 @@ class _DespesaState extends State<Despesa> {
             child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  campoTexto('Descrição da despesa', txtDescricao),
+                  campoTexto('Descrição da despesa', txtDescricao, 'Insira uma descrição.'),
+                  const SizedBox(height: 30),
+                  campoTexto('Conta', txtConta, 'Insira uma conta.'),
+                  const SizedBox(height: 30),
+                  campoTexto('Categoria', txtCategoria, 'Insira uma categora.'),
                   const SizedBox(height: 30),
                   campoNumerico('Valor', valor),
                   const SizedBox(height: 30),
@@ -61,7 +70,7 @@ class _DespesaState extends State<Despesa> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       botaoTexto('Cancelar'),
-                      botaoElevated('Salvar', id: id),
+                      botaoElevated('Salvar', id),
                     ],
                   ),
                 ],
@@ -74,7 +83,7 @@ class _DespesaState extends State<Despesa> {
   ///
   ///campoTexto
   ///
-  campoTexto(rotulo, variavel){
+  campoTexto(rotulo, variavel, aviso){
     return TextFormField(
 		controller: variavel,
       decoration: InputDecoration(
@@ -85,7 +94,7 @@ class _DespesaState extends State<Despesa> {
         ),
       ),
       validator: (value){
-        if(value == ''){ return 'Insira uma descrição.';}
+        if(value == ''){ return aviso;}
         else {return null;}
       },
     );
@@ -128,7 +137,7 @@ class _DespesaState extends State<Despesa> {
       validator: (value){
         RegExp regExp = RegExp(r'^([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))(\-)\d{4}$');
         if(value == ''){return 'Insira uma data válida';}
-        else if(!regExp.hasMatch(value!)){return 'Formato de data inválida. Usar formato dia-mês-ano.';}        
+        else if(!regExp.hasMatch(value!)){return 'Formato de data inválida. Usar formato dd-mm-aaaa.';}        
         else {return null;}
       },
     );
@@ -155,7 +164,7 @@ class _DespesaState extends State<Despesa> {
     );
   }//botaoTexto
 
-  botaoElevated(rotulo, {id}) {
+  botaoElevated(rotulo, id) {
     return SizedBox(
       width: 150,
       height: 50,
@@ -172,6 +181,8 @@ class _DespesaState extends State<Despesa> {
                   "descricao": txtDescricao.text,
                   "valor": double.parse(valor.text),
                   "data": data.text,
+                  "conta": txtConta.text,
+                  "categoria": txtCategoria.text,
                 }
               );
               snackbarMsg(context, 'Item adicionado: '+ txtDescricao.text);
@@ -186,6 +197,8 @@ class _DespesaState extends State<Despesa> {
                   "descricao": txtDescricao.text,
                   "valor": double.parse(valor.text),
                   "data": data.text,
+                  "conta": txtConta.text,
+                  "categoria": txtCategoria.text,
                 }
               );
               snackbarMsg(context, 'Despesa atualizada.');

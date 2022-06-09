@@ -26,6 +26,7 @@ class _TransferenciaState extends State<Transferencia> {
         txtOrigem.text = doc.get('origem');
         txtDestino.text = doc.get('destino');
         valor.text = doc.get('valor').toString();
+        data.text = doc.get('data').toString();
       });
   }
   @override
@@ -132,7 +133,7 @@ class _TransferenciaState extends State<Transferencia> {
       validator: (value){
         RegExp regExp = RegExp(r'^([0-2][0-9]|(3)[0-1])(\-)(((0)[0-9])|((1)[0-2]))(\-)\d{4}$');
         if(value == ''){return 'Insira uma data válida';}
-        else if(!regExp.hasMatch(value!)){return 'Formato de data inválida. Usar formato dia-mês-ano.';}        
+        else if(!regExp.hasMatch(value!)){return 'Formato de data inválida. Usar formato dd-mm-aaaa.';}        
         else {return null;}
       },
     );
